@@ -7,6 +7,7 @@ import {AsyncPipe, NgIf} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
 import {ErrorDialogComponent} from "../../shared/components/error-dialog/error-dialog.component";
 import {CategoryPipe} from "../../shared/pipes/category.pipe";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-courses',
@@ -23,11 +24,13 @@ import {CategoryPipe} from "../../shared/pipes/category.pipe";
 
 export class CoursesComponent {
   courses$: Observable<Course[]>;
-  displayedColumns: string[] = ['name', 'category'];
+  displayedColumns: string[] = ['_id', 'name', 'category', 'actions'];
 
   constructor(
     protected coursesService: CoursesService,
     protected dialog: MatDialog,
+    protected router: Router,
+    protected route: ActivatedRoute,
   ) {
     this.courses$ = coursesService.findAll().pipe(
       catchError(() => {
@@ -41,5 +44,9 @@ export class CoursesComponent {
     this.dialog.open(ErrorDialogComponent, {
       data: errorMessage
     });
+  }
+
+  onAdd() {
+    this.router.navigate(['new'], {relativeTo: this.route});
   }
 }

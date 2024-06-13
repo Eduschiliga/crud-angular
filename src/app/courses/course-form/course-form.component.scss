@@ -1,0 +1,35 @@
+mat-card {
+  max-width: 80%;
+  margin: 2em auto;
+  text-align: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+
+.toolbar {
+  margin-bottom: 1em;
+}
+
+.min-width {
+  width: 100%;
+  min-width: 150px;
+}
+
+.form-button {
+  margin: 1em 1em;
+  display: flex;
+  justify-content: space-between;
+  gap: 2em;
+
+  .button {
+    width: 77px;
+    font-weight: bold;
+  }
+
+  .save {
+    width: 100px;
+  }
+}

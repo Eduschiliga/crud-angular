@@ -9,7 +9,7 @@ import {tap} from "rxjs/operators";
 })
 
 export class CoursesService {
-  private readonly API = "/assets/courses.json";
+  private readonly API = "http://localhost:8080/api/courses";
 
   constructor(private http: HttpClient) {
   }
@@ -21,5 +21,10 @@ export class CoursesService {
         console.log(courses);
       })
     );
+  }
+
+  public saveCourse(record: Course) {
+    // console.log(record);
+    return this.http.post<Course>(this.API, record).pipe(first());
   }
 }

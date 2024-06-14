@@ -23,8 +23,7 @@ export class CoursesService {
     );
   }
 
-  public saveCourse(record: Course) {
-    // console.log(record);
+  public saveCourse(record: Partial<Course>) {
     return this.http.post<Course>(this.API, record).pipe(first());
   }
 }

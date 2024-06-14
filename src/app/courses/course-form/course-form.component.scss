@@ -32,4 +32,14 @@ mat-card {
   .save {
     width: 100px;
   }
+
+  .success-snackbar {
+    background-color: green !important;
+    color: white !important;
+  }
+
+  .error-snackbar {
+    background-color: red !important;
+    color: white !important;
+  }
 }

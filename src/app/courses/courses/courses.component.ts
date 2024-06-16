@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ErrorDialogComponent} from "../../shared/components/error-dialog/error-dialog.component";
 import {CategoryPipe} from "../../shared/pipes/category.pipe";
 import {ActivatedRoute, Router} from "@angular/router";
+import {CoursesListComponent} from "../courses-list/courses-list.component";
 
 @Component({
   selector: 'app-courses',
@@ -17,6 +18,7 @@ import {ActivatedRoute, Router} from "@angular/router";
     AsyncPipe,
     NgIf,
     CategoryPipe,
+    CoursesListComponent,
   ],
   templateUrl: './courses.component.html',
   styleUrl: './courses.component.scss'

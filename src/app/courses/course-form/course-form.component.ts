@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {SharedModule} from "../../shared/shared.module";
 import {CoursesService} from "../services/courses.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -18,10 +18,8 @@ import {Course} from "../model/course";
 })
 export class CourseFormComponent {
 
-  form = this.formBuilder.group({
-    name: ["", {nonNullable: true, validator: Validators.required}],
-    category: ["", {nonNullable: true, validator: Validators.required}],
-  });
+  form: FormGroup;
+
 
   constructor(
     protected formBuilder: FormBuilder,
@@ -29,10 +27,13 @@ export class CourseFormComponent {
     private _snackBar: MatSnackBar,
     private location: Location,
   ) {
+    this.form = this.formBuilder.group({
+      name: ["", {nonNullable: true, validator: Validators.required}],
+      category: ["", {nonNullable: true, validator: Validators.required}],
+    });
   }
 
   onSubmit() {
-    // @ts-ignore
     this.serviceCourse.saveCourse(this.form.value).subscribe(data => {
       this.onSuccess(data);
     }, error => {

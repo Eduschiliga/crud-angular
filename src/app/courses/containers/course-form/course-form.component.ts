@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {SharedModule} from "../../shared/shared.module";
-import {CoursesService} from "../services/courses.service";
+import {SharedModule} from "../../../shared/shared.module";
+import {CoursesService} from "../../services/courses.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Location} from "@angular/common";
-import {Course} from "../model/course";
+import {Course} from "../../model/course";
 
 @Component({
   selector: 'app-course-form',

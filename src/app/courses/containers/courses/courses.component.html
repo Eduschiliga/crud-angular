@@ -5,7 +5,12 @@
       <h1>Available courses</h1>
     </mat-toolbar>
 
-    <app-courses-list *ngIf="courses$ | async as courses; else loading" [courses]="courses"></app-courses-list>
+    <app-courses-list
+      (addCourse)="onAdd()"
+      *ngIf="courses$ | async as courses; else loading"
+      [courses]="courses"
+    >
+    </app-courses-list>
 
     <ng-template #loading>
       <section class="loading-spinner">

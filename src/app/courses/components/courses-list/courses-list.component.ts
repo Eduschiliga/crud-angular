@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {CategoryPipe} from "../../shared/pipes/category.pipe";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {CategoryPipe} from "../../../shared/pipes/category.pipe";
 import {
   MatCell,
   MatCellDef,
@@ -14,8 +14,7 @@ import {
 } from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton, MatMiniFabButton} from "@angular/material/button";
-import {Course} from "../model/course";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Course} from "../../model/course";
 import {MatToolbar} from "@angular/material/toolbar";
 
 @Component({
@@ -43,16 +42,14 @@ import {MatToolbar} from "@angular/material/toolbar";
 })
 export class CoursesListComponent {
   @Input() courses: Course[] = [];
+  @Output() addCourse = new EventEmitter(false);
   protected readonly displayedColumns: string[] = ['_id', 'name', 'category', 'actions'];
 
 
-  constructor(
-    protected route: ActivatedRoute,
-    protected router: Router,
-  ) {
+  constructor() {
   }
 
   onAdd() {
-    this.router.navigate(['new'], {relativeTo: this.route});
+    this.addCourse.emit(true);
   }
 }

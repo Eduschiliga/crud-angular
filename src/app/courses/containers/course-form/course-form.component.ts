@@ -5,6 +5,7 @@ import {CoursesService} from "../../services/courses.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Location} from "@angular/common";
 import {Course} from "../../model/course";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-course-form',
@@ -26,11 +27,23 @@ export class CourseFormComponent {
     protected serviceCourse: CoursesService,
     private _snackBar: MatSnackBar,
     private location: Location,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.form = this.formBuilder.group({
+      _id: [""],
       name: ["", {nonNullable: true, validator: Validators.required}],
       category: ["", {nonNullable: true, validator: Validators.required}],
     });
+
+    const course: Course = this.activatedRoute.snapshot.data['course'];
+    if (course) {
+      console.log(course)
+      this.form.setValue({
+        _id: course._id,
+        name: course.name,
+        category: course.category
+      });
+    }
   }
 
   onSubmit() {

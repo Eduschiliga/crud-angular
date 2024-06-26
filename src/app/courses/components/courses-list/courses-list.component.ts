@@ -43,6 +43,7 @@ import {MatToolbar} from "@angular/material/toolbar";
 export class CoursesListComponent {
   @Input() courses: Course[] = [];
   @Output() addCourse = new EventEmitter(false);
+  @Output() editCourse = new EventEmitter(false);
   protected readonly displayedColumns: string[] = ['_id', 'name', 'category', 'actions'];
 
 
@@ -51,5 +52,9 @@ export class CoursesListComponent {
 
   onAdd() {
     this.addCourse.emit(true);
+  }
+
+  onEdit(course: Course) {
+    this.editCourse.emit(course);
   }
 }

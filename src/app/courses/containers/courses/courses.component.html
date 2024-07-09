@@ -8,6 +8,7 @@
     <app-courses-list
       (addCourse)="onAdd()"
       (editCourse)="onEdit($event)"
+      (removeCourse)="onRemove($event)"
       *ngIf="courses$ | async as courses; else loading"
       [courses]="courses"
     >

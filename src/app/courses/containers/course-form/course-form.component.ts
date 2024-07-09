@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {SharedModule} from "../../../shared/shared.module";
 import {CoursesService} from "../../services/courses.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Location} from "@angular/common";
+import {Location, NgIf} from "@angular/common";
 import {Course} from "../../model/course";
 import {ActivatedRoute} from "@angular/router";
 
@@ -12,15 +12,14 @@ import {ActivatedRoute} from "@angular/router";
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    NgIf
   ],
   templateUrl: './course-form.component.html',
   styleUrl: './course-form.component.scss'
 })
 export class CourseFormComponent {
-
   form: FormGroup;
-
 
   constructor(
     protected formBuilder: FormBuilder,
@@ -31,8 +30,8 @@ export class CourseFormComponent {
   ) {
     this.form = this.formBuilder.group({
       _id: [""],
-      name: ["", {nonNullable: true, validator: Validators.required}],
-      category: ["", {nonNullable: true, validator: Validators.required}],
+      name: ["", [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+      category: ["", [Validators.required]],
     });
 
     const course: Course = this.activatedRoute.snapshot.data['course'];
@@ -68,5 +67,13 @@ export class CourseFormComponent {
 
   private onError() {
     this._snackBar.open("Error saving course!", '', {duration: 5000, panelClass: ['error-snackbar']});
+  }
+
+  getErrorMessage(fieldName: string) {
+    const field = this.form.get(fieldName);
+    return field?.hasError('required') ? 'This field is required' :
+      field?.hasError('minlength') ? 'Minimum length is 5 characters' :
+        field?.hasError('maxlength') ? 'Maximum length is 100 characters' :
+          '';
   }
 }

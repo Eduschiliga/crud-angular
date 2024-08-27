@@ -1,11 +1,12 @@
-import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {SharedModule} from "../../../shared/shared.module";
-import {CoursesService} from "../../services/courses.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {Location, NgIf} from "@angular/common";
-import {Course} from "../../model/course";
-import {ActivatedRoute} from "@angular/router";
+import { Location, NgIf } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
+
+import { SharedModule } from '../../../shared/shared.module';
+import { Course } from '../../model/course';
+import { CoursesService } from '../../services/courses.service';
 
 @Component({
   selector: 'app-course-form',
@@ -30,11 +31,13 @@ export class CourseFormComponent {
   ) {
     this.form = this.formBuilder.group({
       _id: [""],
-      name: ["", [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+      name: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       category: ["", [Validators.required]],
     });
 
     const course: Course = this.activatedRoute.snapshot.data['course'];
+    console.log("Teste")
+    console.log(course)
     if (course) {
       console.log(course)
       this.form.setValue({
@@ -70,10 +73,22 @@ export class CourseFormComponent {
   }
 
   getErrorMessage(fieldName: string) {
-    const field = this.form.get(fieldName);
-    return field?.hasError('required') ? 'This field is required' :
-      field?.hasError('minlength') ? 'Minimum length is 5 characters' :
-        field?.hasError('maxlength') ? 'Maximum length is 100 characters' :
-          '';
+    const FIELD = this.form.get(fieldName);
+
+    if (FIELD?.hasError('required')) {
+      return 'This field is required';
+    }
+
+    if (FIELD?.hasError('minlength')) {
+      const REQUIRED_LENGTH = FIELD?.errors ? FIELD?.errors['minlength']['requiredLength'] : 3;
+      return `Minimum length is ${REQUIRED_LENGTH} characters`;
+    }
+
+    if (FIELD?.hasError('maxlength')) {
+      const REQUIRED_LENGTH = FIELD?.errors ? FIELD?.errors['maxlength']['requiredLength'] : 3;
+      return `Max length is ${REQUIRED_LENGTH} characters`;
+    }
+
+    return 'Check the field';
   }
 }

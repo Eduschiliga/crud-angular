@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CategoryPipe} from "../../../shared/pipes/category.pipe";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatIconButton, MatMiniFabButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import {
   MatCell,
   MatCellDef,
@@ -10,12 +11,12 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
-} from "@angular/material/table";
-import {MatIcon} from "@angular/material/icon";
-import {MatIconButton, MatMiniFabButton} from "@angular/material/button";
-import {Course} from "../../model/course";
-import {MatToolbar} from "@angular/material/toolbar";
+  MatTable,
+} from '@angular/material/table';
+import { MatToolbar } from '@angular/material/toolbar';
+
+import { CategoryPipe } from '../../../shared/pipes/category.pipe';
+import { Course } from '../../model/course';
 
 @Component({
   selector: 'app-courses-list',
@@ -47,9 +48,7 @@ export class CoursesListComponent {
   @Output() removeCourse = new EventEmitter(false);
   protected readonly displayedColumns: string[] = ['_id', 'name', 'category', 'actions'];
 
-
-  constructor() {
-  }
+  constructor() { }
 
   onAdd() {
     this.addCourse.emit(true);

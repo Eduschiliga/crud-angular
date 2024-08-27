@@ -15,6 +15,7 @@ import {
 } from '@angular/material/table';
 import { MatToolbar } from '@angular/material/toolbar';
 
+
 import { CategoryPipe } from '../../../shared/pipes/category.pipe';
 import { Course } from '../../model/course';
 
@@ -36,7 +37,7 @@ import { Course } from '../../model/course';
     MatTable,
     MatMiniFabButton,
     MatHeaderCellDef,
-    MatToolbar
+    MatToolbar,
   ],
   templateUrl: './courses-list.component.html',
   styleUrl: './courses-list.component.scss'

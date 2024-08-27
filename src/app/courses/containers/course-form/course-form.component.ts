@@ -57,10 +57,7 @@ export class CourseFormComponent {
     });
 
     const course: Course = this.activatedRoute.snapshot.data['course'];
-    console.log("Teste")
-    console.log(course)
     if (course) {
-      console.log(course)
       this.form.setValue({
         _id: course._id,
         name: course.name,

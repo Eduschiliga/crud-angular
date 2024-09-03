@@ -1,6 +1,6 @@
 import { Location, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -16,6 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Course } from '../../model/course';
 import { CoursesService } from '../../services/courses.service';
+import { Lesson } from '../../model/lesson';
 
 @Component({
   selector: 'app-course-form',
@@ -40,37 +41,54 @@ import { CoursesService } from '../../services/courses.service';
   templateUrl: './course-form.component.html',
   styleUrl: './course-form.component.scss'
 })
-export class CourseFormComponent {
-  form: FormGroup;
+export class CourseFormComponent implements OnInit {
+  protected form!: FormGroup;
 
   constructor(
-    protected formBuilder: FormBuilder,
+    protected formBuilder: NonNullableFormBuilder,
     protected serviceCourse: CoursesService,
     private _snackBar: MatSnackBar,
     private location: Location,
     private activatedRoute: ActivatedRoute,
-  ) {
-    this.form = this.formBuilder.group({
-      _id: [""],
-      name: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      category: ["", [Validators.required]],
-    });
+  ) { }
 
-    const course: Course = this.activatedRoute.snapshot.data['course'];
-    if (course) {
-      this.form.setValue({
-        _id: course._id,
-        name: course.name,
-        category: course.category
+  ngOnInit() {
+    const COURSE: Course = this.activatedRoute.snapshot.data['course'];
+
+    if (COURSE) {
+      this.form = this.formBuilder.group({
+        _id: [COURSE._id],
+        name: [COURSE.name, [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+        category: [COURSE.category, [Validators.required]],
+        lessons: this.formBuilder.array(this.retrieveLessons(COURSE))
       });
     }
   }
 
+  private retrieveLessons(course: Course) {
+    const LESSONS = [];
+    if (course?.lessons) {
+      course.lessons.forEach(lesson => {
+        LESSONS.push(this.createLesson(lesson));
+      });
+    } else {
+      LESSONS.push(this.createLesson());
+    }
+    return LESSONS;
+  }
+
+  private createLesson(lesson: Lesson = {id: '', name: '', youtubeUrl: ''}) {
+    return this.formBuilder.group({
+      id: [lesson.id],
+      name: [lesson.name],
+      youtubeUrl: [lesson.youtubeUrl]
+    });
+  }
+
   onSubmit() {
-    this.serviceCourse.saveCourse(this.form.value).subscribe(data => {
-      this.onSuccess(data);
-    }, error => {
-      this.onError();
+    this.serviceCourse.saveCourse(this.form.value).subscribe({
+      next: (data: Course) => this.onSuccess(data),
+      error: () => this.onError(),
     });
   }
 

@@ -6,10 +6,17 @@
   <mat-card-content class="">
     <form [formGroup]="form" class="min-width">
       <mat-form-field class="full-width">
-        <input #name formControlName="name" matInput placeholder="Name" maxlength="100" minlength="3">
+        <input
+          #name
+          formControlName="name"
+          matInput
+          placeholder="Name"
+          maxlength="100"
+          minlength="3"
+        />
         <mat-hint align="end">{{ name.value.length || 0 }} / 100</mat-hint>
-        @if (form.get('name')?.invalid) {
-          <mat-error>{{ getErrorMessage('name') }}</mat-error>
+        @if (form.get("name")?.invalid) {
+          <mat-error>{{ this.formUtils.getErrorMessage(this.form, "name") }}</mat-error>
         }
       </mat-form-field>
 
@@ -19,17 +26,68 @@
           <mat-option value="Front-End">Front-End</mat-option>
           <mat-option value="Back-End">Back-End</mat-option>
         </mat-select>
-        @if (form.get('category')?.invalid) {
-          <mat-error>{{ getErrorMessage('category') }}</mat-error>
+        @if (form.get("category")?.invalid) {
+          <mat-error>{{ this.formUtils.getErrorMessage(this.form, "name") }}</mat-error>
         }
       </mat-form-field>
+
+      <mat-toolbar>
+        <span>Lessons</span>
+        <button mat-icon-button color="accent" (click)="addNewLesson()">
+          <mat-icon aria-label="Add a new class">add</mat-icon>
+        </button>
+      </mat-toolbar>
+
+      @if (this.formUtils.isFormArrayRequired(this.form, "lessons")) {
+        <mat-error class="form-array-error">Add at least one lesson</mat-error>
+      }
+
+      <table style="width: 100%" formArrayName="lessons">
+        @for (lesson of getLessonsFormArray(); track $index) {
+          <tr [formGroupName]="$index">
+            <td style="width: 50%">
+              <mat-form-field class="full-width">
+                <mat-label>Class Name</mat-label>
+                <input matInput formControlName="name" />
+                @if (this.getLessonsFormArray()[$index].get("name")?.invalid) {
+                  <mat-error class="form-array-error">{{ this.formUtils.getFormArrayFieldErrorMessage(this.form, "lessons", "name", $index) }}</mat-error>
+                }
+              </mat-form-field>
+            </td>
+
+            <td style="width: 40%">
+              <mat-form-field class="full-width">
+                <mat-label>URL</mat-label>
+                <span matPrefix>https://youtu.be/</span>
+                <input matInput formControlName="youtubeUrl" />
+                @if (this.getLessonsFormArray()[$index].get("youtubeUrl")?.invalid) {
+                  <mat-error class="form-array-error">{{ this.formUtils.getFormArrayFieldErrorMessage(this.form, "lessons", "youtubeUrl", $index) }}</mat-error>
+                }
+              </mat-form-field>
+            </td>
+
+            <td style="width: 10%;">
+              <button mat-icon-button color="warn" (click)="removeLesson($index)">
+                <mat-icon aria-label="Remove a new class">delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        }
+      </table>
     </form>
   </mat-card-content>
 
   <mat-card-actions class="form-button">
-    <button mat-raised-button color="primary" class="button save" (click)="onSubmit()">Save</button>
-    <button mat-raised-button class="button" (click)="onCancel()">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      class="button save"
+      (click)="onSubmit()"
+    >
+      Save
+    </button>
+    <button mat-raised-button class="button" (click)="onCancel()">
+      Cancel
+    </button>
   </mat-card-actions>
 </mat-card>
-
-

@@ -1,18 +1,20 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatCard } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSpinner } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatToolbar } from '@angular/material/toolbar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ErrorDialogComponent } from '../../../shared/components/error-dialog/error-dialog.component';
 import { CategoryPipe } from '../../../shared/pipes/category.pipe';
 import { CoursesListComponent } from '../../components/courses-list/courses-list.component';
 import { Course } from '../../model/course';
+import { CoursePage } from '../../model/course-page';
 import { CoursesService } from '../../services/courses.service';
 
 @Component({
@@ -25,15 +27,19 @@ import { CoursesService } from '../../services/courses.service';
     CoursesListComponent,
     MatSpinner,
     MatCard,
-    MatToolbar
+    MatToolbar,
+    MatPaginatorModule
 ],
   templateUrl: './courses.component.html',
-  styleUrl: './courses.component.scss'
+  styleUrls: ['./courses.component.scss']
 })
 
 export class CoursesComponent {
-  courses$: Observable<Course[]> | undefined;
+  courses$!: Observable<CoursePage>;
   displayedColumns: string[] = ['_id', 'name', 'category', 'actions'];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  pageIndex = 0;
+  pageSize = 10;
 
   constructor(
     protected coursesService: CoursesService,
@@ -45,13 +51,18 @@ export class CoursesComponent {
     this.refresh();
   }
 
-  refresh() {
-    this.courses$ = this.coursesService.findAll().pipe(
+  refresh(pageEvent: PageEvent = {pageIndex: 0, pageSize: 10, length: 0}) {
+    this.courses$ = this.coursesService.findAll(pageEvent.pageIndex, pageEvent.pageSize).pipe(
+      tap(() => {
+        this.pageIndex = pageEvent.pageIndex;
+        this.pageSize = pageEvent.pageSize;
+      }),
       catchError(() => {
         this.onError("Ops! Error loading courses! Wait a moment");
-        return of([]);
+        return of({courses: [], totalElements: 0, totalPages: 0});
       })
     );
+
   }
 
   onError(errorMessage: string) {

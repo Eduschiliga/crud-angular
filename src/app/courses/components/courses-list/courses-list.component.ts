@@ -18,6 +18,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 
 import { CategoryPipe } from '../../../shared/pipes/category.pipe';
 import { Course } from '../../model/course';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-courses-list',
@@ -38,6 +39,7 @@ import { Course } from '../../model/course';
     MatMiniFabButton,
     MatHeaderCellDef,
     MatToolbar,
+    MatPaginatorModule
   ],
   templateUrl: './courses-list.component.html',
   styleUrl: './courses-list.component.scss'

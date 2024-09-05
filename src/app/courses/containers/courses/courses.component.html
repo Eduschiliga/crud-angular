@@ -1,5 +1,5 @@
 <mat-card style="padding: 16px">
-  <section class="mat-elevation-z8 column-flex">
+  <section class="mat-elevation-z8 column-flex" *ngIf="courses$ | async as courses; else loading">
 
     <mat-toolbar color="secondary" style="display: flex; justify-content:space-between">
       <h1>Available courses</h1>
@@ -9,15 +9,26 @@
       (addCourse)="onAdd()"
       (editCourse)="onEdit($event)"
       (removeCourse)="onRemove($event)"
-      *ngIf="courses$ | async as courses; else loading"
-      [courses]="courses"
+      [courses]="courses.courses"
     >
     </app-courses-list>
 
-    <ng-template #loading>
-      <section class="loading-spinner">
-        <mat-spinner></mat-spinner>
-      </section>
-    </ng-template>
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 15]"
+      showFirstLastButtons
+      aria-label="Select page of courses"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [length]="courses.totalElements"
+      (page)="refresh($event)"
+    >
+    </mat-paginator>
+
   </section>
+
+  <ng-template #loading>
+    <section class="loading-spinner">
+      <mat-spinner></mat-spinner>
+    </section>
+  </ng-template>
 </mat-card>
